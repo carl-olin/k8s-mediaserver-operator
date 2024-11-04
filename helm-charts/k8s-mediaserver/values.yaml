@@ -166,8 +166,6 @@ transmission:
       password: ""
   resources: {}
   volume: {}
-  vpn:
-    enabled: false
   #  name: pvc-transmission-config
   #  storageClassName: longhorn
   #  annotations: {}
@@ -175,6 +173,19 @@ transmission:
   #  accessModes: ReadWriteOnce
   #  storage: 5Gi
   #  selector: {}
+  wireguard:
+    enabled: false
+    endpointIp: ""
+    endpointPort: ""
+    publicKey: ""
+    privateKey: ""
+    presharedKey: ""
+    addresses: ""
+    portForwarding:
+      enabled: false
+      provider: ""
+      statusFile: ""
+      listeningPort: ""
 
 sabnzbd:
   enabled: true

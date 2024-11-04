@@ -173,27 +173,54 @@ spec:
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-        {{- if .Values.transmission.vpn.enabled }}
+        {{- if .Values.transmission.wireguard.enabled }}
         - name: gluetun
-          image: ghcr.io/qdm12/gluetun # Optionally you can use the "qmcgaw/gluetun" image as well as specify what version of Gluetun you desire
+          image: qmcgaw/gluetun:v3.38.0
           imagePullPolicy: Always
           securityContext:
             capabilities:
               add: ["NET_ADMIN"]
+          ports:
+            - name: control-server
+              containerPort: 8000
+              protocol: TCP
           env:
-          {{- if eq .Values.transmission.vpn.provider  `mullvad` }}
-            # https://github.com/qdm12/gluetun-wiki/blob/main/setup/providers/mullvad.md
-            - name: TZ
-              value: "Europe/London"
-            - name: VPN_SERVICE_PROVIDER
-              value: "{{ .Values.transmission.vpn.provider }}"
-            - name: VPN_TYPE
-              value: "{{ .Values.transmission.vpn.type }}"
-            - name: OPENVPN_USER
-              value: {{ .Values.transmission.vpn.user | quote }}
-            - name: SERVER_CITIES
-              value: {{ .Values.transmission.vpn.city }}
-          {{ end }}
+          - name: VPN_SERVICE_PROVIDER
+            value: custom
+          - name: VPN_TYPE
+            value: wireguard
+          - name: WIREGUARD_ENDPOINT_IP
+            value: {{ .Values.transmission.wireguard.endpointIp }}
+          - name: WIREGUARD_ENDPOINT_PORT
+            value: {{ .Values.transmission.wireguard.endpointPort | quote }}
+          - name: WIREGUARD_PUBLIC_KEY
+            value: {{ .Values.transmission.wireguard.publicKey }}
+          - name: WIREGUARD_PRIVATE_KEY
+            value: {{ .Values.transmission.wireguard.privateKey }}
+          - name: WIREGUARD_PRESHARED_KEY
+            value: {{ .Values.transmission.wireguard.presharedKey }}
+          - name: WIREGUARD_ADDRESSES
+            value: {{ .Values.transmission.wireguard.addresses }}
+          {{- if .Values.transmission.wireguard.portForwarding.enabled }}
+          - name: VPN_PORT_FORWARDING
+            value: "on"
+          - name: VPN_PORT_FORWARDING_PROVIDER
+            value: {{ .Values.transmission.wireguard.portForwarding.provider }}
+          - name: VPN_PORT_FORWARDING_STATUS_FILE
+            value: {{ .Values.transmission.wireguard.portForwarding.statusFile }}
+          - name: VPN_PORT_FORWARDING_LISTENING_PORT
+            value: {{ .Values.transmission.wireguard.portForwarding.listeningPort | quote }}
+          {{- end }}
+        {{- end }}
+        {{- if .Values.transmission.wireguard.portForwarding.enabled }}
+        - name: portpusher
+          image: nanreh/portpusher
+          imagePullPolicy: Always
+          env:
+          - name: TRANSMISSION_ENABLED
+            value: "true"
+          - name: TRANSMISSION_PORT
+            value: "9091"
         {{- end }}
       volumes:
         {{ if not .Values.general.storage.customVolume }}
