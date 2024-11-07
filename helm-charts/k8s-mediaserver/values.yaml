@@ -83,8 +83,10 @@ radarr:
     extraLBAnnotations: {}
   ingress:
     enabled: true
+    host: ""
+    ingressClassName: ""
     annotations: {}
-    path: /radarr
+    path: "/"
     tls:
       enabled: false
       secretName: ""
