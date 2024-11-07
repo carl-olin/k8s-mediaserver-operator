@@ -248,8 +248,10 @@ prowlarr:
     extraLBAnnotations: {}
   ingress:
     enabled: true
+    host: ""
+    ingressClassName: ""
     annotations: {}
-    path: /prowlarr
+    path: "/"
     tls:
       enabled: false
       secretName: ""
