@@ -154,8 +154,10 @@ transmission:
       extraLBAnnotations: {}
   ingress:
     enabled: true
+    host: ""
+    ingressClassName: ""
     annotations: {}
-    path: /transmission
+    path: "/"
     tls:
       enabled: false
       secretName: ""

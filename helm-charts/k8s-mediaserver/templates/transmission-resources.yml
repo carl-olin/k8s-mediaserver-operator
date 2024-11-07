@@ -405,12 +405,12 @@ spec:
 {{- if .Values.transmission.ingress.tls.enabled }}
   tls:
     - hosts:
-        - {{ .Values.general.ingress_host | quote }}
+        - {{ .Values.transmission.ingress.host | quote }}
       secretName: {{ .Values.transmission.ingress.tls.secretName }}
 {{ end }}
-  ingressClassName: {{ .Values.general.ingress.ingressClassName }}
+  ingressClassName: {{ .Values.transmission.ingress.ingressClassName }}
   rules:
-    - host: {{ .Values.general.ingress_host | quote }}
+    - host: {{ .Values.transmission.ingress.host | quote }}
       http:
         paths:
           - path: {{ .Values.transmission.ingress.path }}
