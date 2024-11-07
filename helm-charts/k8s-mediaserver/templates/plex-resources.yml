@@ -167,12 +167,12 @@ spec:
 {{- if .Values.plex.ingress.tls.enabled }}
   tls:
     - hosts:
-        - {{ .Values.general.plex_ingress_host | quote }}
+        - {{ .Values.plex.ingress.host | quote }}
       secretName: {{ .Values.plex.ingress.tls.secretName }}
 {{ end }}
-  ingressClassName: {{ .Values.general.ingress.ingressClassName }}
+  ingressClassName: {{ .Values.plex.ingress.ingressClassName }}
   rules:
-    - host: {{ .Values.general.plex_ingress_host | quote }}
+    - host: {{ .Values.plex.ingress.host | quote }}
       http:
         paths:
           - path: /

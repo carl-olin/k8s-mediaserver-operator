@@ -141,12 +141,12 @@ spec:
 {{- if .Values.jellyfin.ingress.tls.enabled }}
   tls:
     - hosts:
-        - {{ .Values.general.jellyfin_ingress_host | quote }}
+        - {{ .Values.jellyfin.ingress.host | quote }}
       secretName: {{ .Values.jellyfin.ingress.tls.secretName }}
 {{ end }}
-  ingressClassName: {{ .Values.general.ingress.ingressClassName }}
+  ingressClassName: {{ .Values.jellyfin.ingress.ingressClassName }}
   rules:
-    - host: {{ .Values.general.jellyfin_ingress_host | quote }}
+    - host: {{ .Values.jellyfin.ingress.host | quote }}
       http:
         paths:
           - path: /
