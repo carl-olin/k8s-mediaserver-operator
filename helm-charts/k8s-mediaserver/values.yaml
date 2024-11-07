@@ -113,8 +113,10 @@ jackett:
     # Defines an additional LB service, requires cloud provider service or MetalLB
   ingress:
     enabled: true
+    host: ""
+    ingressClassName: ""
     annotations: {}
-    path: /jackett
+    path: "/"
     tls:
       enabled: false
       secretName: ""
