@@ -167,8 +167,7 @@ spec:
               subPath: "{{ .Values.general.storage.subPaths.config }}/transmission"
           {{ end }}
             - name: mediaserver-volume
-              mountPath: "/downloads"
-              subPath: "{{ .Values.general.storage.subPaths.downloads }}"
+              mountPath: "/media"
           {{- with .Values.transmission.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
