@@ -95,11 +95,7 @@ spec:
               subPath: "{{ .Values.general.storage.subPaths.config }}/radarr"
           {{- end }}
             - name: mediaserver-volume
-              mountPath: "/downloads"
-              subPath: "{{ .Values.general.storage.subPaths.downloads }}"
-            - name: mediaserver-volume
-              mountPath: "/movies"
-              subPath: "{{ .Values.general.storage.subPaths.movies }}"
+              mountPath: "/media"
           {{- with .Values.radarr.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
