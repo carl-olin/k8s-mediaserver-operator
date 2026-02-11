@@ -72,8 +72,8 @@ spec:
               protocol: TCP
           securityContext:
             {{- if .Values.jellyfin.hwTranscoding.enabled }}
+            privileged: true
             runAsGroup: {{ .Values.jellyfin.hwTranscoding.videoGid }}
-            allowPrivilegeEscalation: false
             {{- end }}
           volumeMounts:
           {{- if .Values.jellyfin.volume }}
