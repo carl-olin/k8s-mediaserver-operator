@@ -27,6 +27,10 @@ spec:
         {{- include "k8s-mediaserver.selectorLabels" . | nindent 8 }}
         app: jellyfin
     spec:
+      {{- if .Values.jellyfin.hwTranscoding.enabled }}
+      securityContext:
+        fsGroup: {{ .Values.jellyfin.hwTranscoding.videoGid }}
+      {{- end }}
       volumes:
         {{- if not .Values.general.storage.customVolume }}
         - name: mediaserver-volume
@@ -40,6 +44,12 @@ spec:
         - name: {{ .Values.jellyfin.volume.name }}
           persistentVolumeClaim:
             claimName: {{ .Values.jellyfin.volume.name }}
+        {{- end }}
+        {{- if .Values.jellyfin.hwTranscoding.enabled }}
+        - name: dri
+          hostPath:
+            path: {{ .Values.jellyfin.hwTranscoding.driPath }}
+            type: Directory
         {{- end }}
       containers:
         - name: {{ .Chart.Name }}
@@ -57,6 +67,11 @@ spec:
             - name: jellyfin-port
               containerPort: {{ .Values.jellyfin.container.port }}
               protocol: TCP
+          securityContext:
+            {{- if .Values.jellyfin.hwTranscoding.enabled }}
+            runAsGroup: {{ .Values.jellyfin.hwTranscoding.videoGid }}
+            allowPrivilegeEscalation: false
+            {{- end }}
           volumeMounts:
           {{- if .Values.jellyfin.volume }}
             - name: {{ .Values.jellyfin.volume.name }}
@@ -75,6 +90,10 @@ spec:
             - name: mediaserver-volume
               mountPath: /downloads
               subPath: "{{ .Values.general.storage.subPaths.downloads }}"
+          {{- if .Values.jellyfin.hwTranscoding.enabled }}
+            - name: dri
+              mountPath: /dev/dri
+          {{- end }}
           {{- with .Values.jellyfin.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
