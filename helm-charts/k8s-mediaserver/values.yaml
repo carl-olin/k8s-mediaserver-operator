@@ -305,6 +305,14 @@ plex:
   #  accessModes: ReadWriteOnce
   #  storage: 5Gi
   #  selector: {}
+  hwTranscoding:
+    enabled: true
+
+    # GID of the "video" group on the host (Arch = 44)
+    videoGid: 985
+
+    # Path to DRM devices
+    driPath: /dev/dri
 
 jellyfin:
   enabled: false

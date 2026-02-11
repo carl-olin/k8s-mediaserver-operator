@@ -30,6 +30,10 @@ spec:
         {{- include "k8s-mediaserver.selectorLabels" . | nindent 8 }}
         app: plex
     spec:
+      {{- if .Values.plex.hwTranscoding.enabled }}
+      securityContext:
+        fsGroup: {{ .Values.plex.hwTranscoding.videoGid }}
+      {{- end }}
       volumes:
         {{- if not .Values.general.storage.customVolume }}
         - name: mediaserver-volume
@@ -43,6 +47,12 @@ spec:
         - name: {{ .Values.plex.volume.name }}
           persistentVolumeClaim:
             claimName: {{ .Values.plex.volume.name }}
+        {{- end }}
+        {{- if .Values.plex.hwTranscoding.enabled }}
+        - name: dri
+          hostPath:
+            path: {{ .Values.plex.hwTranscoding.driPath }}
+            type: Directory
         {{- end }}
       containers:
         - name: {{ .Chart.Name }}
@@ -62,6 +72,11 @@ spec:
             - name: plex-port
               containerPort: {{ .Values.plex.container.port }}
               protocol: TCP
+          securityContext:
+            {{- if .Values.plex.hwTranscoding.enabled }}
+            runAsGroup: {{ .Values.plex.hwTranscoding.videoGid }}
+            allowPrivilegeEscalation: false
+            {{- end }}
           volumeMounts:
           {{- if .Values.plex.volume }}
             - name: {{ .Values.plex.volume.name }}
@@ -73,6 +88,10 @@ spec:
           {{- end }}
             - name: mediaserver-volume
               mountPath: /media
+          {{- if .Values.plex.hwTranscoding.enabled }}
+            - name: dri
+              mountPath: /dev/dri
+          {{- end }}
           {{- with .Values.plex.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
