@@ -63,6 +63,9 @@ spec:
               port: {{ .Values.jellyfin.container.port }}
             initialDelaySeconds: 20
             periodSeconds: 15
+          env:
+            - name: LIBVA_DRIVER_NAME
+              value: radeonsi
           ports:
             - name: jellyfin-port
               containerPort: {{ .Values.jellyfin.container.port }}
