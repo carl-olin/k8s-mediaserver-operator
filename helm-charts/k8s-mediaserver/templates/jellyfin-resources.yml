@@ -41,7 +41,7 @@ spec:
           {{- toYaml .Values.general.storage.volumes | nindent 10 }}
         {{- end }}
         {{- if .Values.jellyfin.mediaVolume.claimName }}
-        - name: jellyfin-media-volume
+        - name: jellyfin-downloads-volume
           persistentVolumeClaim:
             claimName: {{ .Values.jellyfin.mediaVolume.claimName }}
         {{- end }}
@@ -89,26 +89,22 @@ spec:
               mountPath: /config
               subPath: "{{ .Values.general.storage.subPaths.config }}/jellyfin"
           {{- end }}
-            {{- if .Values.jellyfin.mediaVolume.claimName }}
-            - name: jellyfin-media-volume
+            - name: mediaserver-volume
               mountPath: /movies
               subPath: "{{ .Values.general.storage.subPaths.movies }}"
-              readOnly: {{ .Values.jellyfin.mediaVolume.readOnly }}
-            - name: jellyfin-media-volume
+            - name: mediaserver-volume
               mountPath: /tv
               subPath: "{{ .Values.general.storage.subPaths.tv }}"
+            {{- if .Values.jellyfin.mediaVolume.claimName }}
+            - name: jellyfin-downloads-volume
+              mountPath: /downloads
+              subPath: "{{ .Values.general.storage.subPaths.downloads }}"
               readOnly: {{ .Values.jellyfin.mediaVolume.readOnly }}
             {{- else }}
             - name: mediaserver-volume
-              mountPath: /movies
-              subPath: "{{ .Values.general.storage.subPaths.movies }}"
-            - name: mediaserver-volume
-              mountPath: /tv
-              subPath: "{{ .Values.general.storage.subPaths.tv }}"
-            {{- end }}
-            - name: mediaserver-volume
               mountPath: /downloads
               subPath: "{{ .Values.general.storage.subPaths.downloads }}"
+            {{- end }}
           {{- if .Values.jellyfin.hwTranscoding.enabled }}
             - name: dri
               mountPath: /dev/dri
