@@ -40,6 +40,11 @@ spec:
         - name: mediaserver-volume
           {{- toYaml .Values.general.storage.volumes | nindent 10 }}
         {{- end }}
+        {{- if .Values.jellyfin.mediaVolume.claimName }}
+        - name: jellyfin-media-volume
+          persistentVolumeClaim:
+            claimName: {{ .Values.jellyfin.mediaVolume.claimName }}
+        {{- end }}
         {{- if .Values.jellyfin.volume }}
         - name: {{ .Values.jellyfin.volume.name }}
           persistentVolumeClaim:
@@ -84,12 +89,23 @@ spec:
               mountPath: /config
               subPath: "{{ .Values.general.storage.subPaths.config }}/jellyfin"
           {{- end }}
+            {{- if .Values.jellyfin.mediaVolume.claimName }}
+            - name: jellyfin-media-volume
+              mountPath: /movies
+              subPath: "{{ .Values.general.storage.subPaths.movies }}"
+              readOnly: {{ .Values.jellyfin.mediaVolume.readOnly }}
+            - name: jellyfin-media-volume
+              mountPath: /tv
+              subPath: "{{ .Values.general.storage.subPaths.tv }}"
+              readOnly: {{ .Values.jellyfin.mediaVolume.readOnly }}
+            {{- else }}
             - name: mediaserver-volume
               mountPath: /movies
               subPath: "{{ .Values.general.storage.subPaths.movies }}"
             - name: mediaserver-volume
               mountPath: /tv
               subPath: "{{ .Values.general.storage.subPaths.tv }}"
+            {{- end }}
             - name: mediaserver-volume
               mountPath: /downloads
               subPath: "{{ .Values.general.storage.subPaths.downloads }}"

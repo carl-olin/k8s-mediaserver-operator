@@ -269,6 +269,9 @@ prowlarr:
 plex:
   enabled: true
   claim: "CHANGEME"
+  mediaVolume:
+    claimName: ""
+    readOnly: true
   replicaCount: 1
   container:
     image: docker.io/linuxserver/plex
@@ -316,6 +319,9 @@ plex:
 
 jellyfin:
   enabled: false
+  mediaVolume:
+    claimName: ""
+    readOnly: true
   replicaCount: 1
   container:
     image: docker.io/linuxserver/jellyfin

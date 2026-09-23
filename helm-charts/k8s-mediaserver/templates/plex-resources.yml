@@ -43,6 +43,11 @@ spec:
         - name: mediaserver-volume
           {{- toYaml .Values.general.storage.volumes | nindent 10 }}
         {{- end }}
+        {{- if .Values.plex.mediaVolume.claimName }}
+        - name: plex-media-volume
+          persistentVolumeClaim:
+            claimName: {{ .Values.plex.mediaVolume.claimName }}
+        {{- end }}
         {{- if .Values.plex.volume }}
         - name: {{ .Values.plex.volume.name }}
           persistentVolumeClaim:
@@ -89,8 +94,14 @@ spec:
               mountPath: /config
               subPath: "{{ .Values.general.storage.subPaths.config }}/plex"
           {{- end }}
+            {{- if .Values.plex.mediaVolume.claimName }}
+            - name: plex-media-volume
+              mountPath: /media
+              readOnly: {{ .Values.plex.mediaVolume.readOnly }}
+            {{- else }}
             - name: mediaserver-volume
               mountPath: /media
+            {{- end }}
           {{- if .Values.plex.hwTranscoding.enabled }}
             - name: dri
               mountPath: /dev/dri
