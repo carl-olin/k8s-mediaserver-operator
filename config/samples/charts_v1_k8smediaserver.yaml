@@ -79,6 +79,9 @@ spec:
       nodeSelector: {}
       port: 8096
     enabled: false
+    mediaVolume:
+      claimName: ""
+      readOnly: true
     ingress:
       annotations: {}
       enabled: true

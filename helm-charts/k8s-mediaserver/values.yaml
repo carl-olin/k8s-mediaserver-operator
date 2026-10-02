@@ -320,6 +320,7 @@ plex:
 jellyfin:
   enabled: false
   mediaVolume:
+    # Leave claimName empty to use general.storage.pvcName for downloads.
     claimName: ""
     readOnly: true
   replicaCount: 1
