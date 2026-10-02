@@ -320,7 +320,8 @@ plex:
 jellyfin:
   enabled: false
   mediaVolume:
-    # Leave claimName empty to use general.storage.pvcName for downloads.
+    # Leave claimName empty to reuse the general storage volume for downloads.
+    # Matching claims also reuse that volume; readOnly applies in either case.
     claimName: ""
     readOnly: true
   replicaCount: 1
