@@ -291,7 +291,7 @@ spec:
   jellyfin:
     enabled: false
     mediaVolume:
-      claimName: ""
+      claimName: wd
       readOnly: true
     replicaCount: 1
     container:
